@@ -1,8 +1,6 @@
 
 //const fetch = require('node-fetch'); //to correct ReferenceError: fetch is not defined with node
 
-//const {getAllProducts} = require('../back/controllers/product');
-
 const kanapCatalogBaseUrl = 'http://localhost:3000/api/products';// base url to access Kanap catalog
 
 // fetch objects from the kanap catalog, async await function
