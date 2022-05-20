@@ -1,6 +1,7 @@
 const kanapCatalogBaseUrl = 'http://localhost:3000/api/products';// base url to access Kanap catalog
 const urlParams = (new URL(document.location)).searchParams;
 const productId = urlParams.get('id'); //retrieving product-id from url
+let productFetched = {}; // object to save fetched product from kanap catalog
 
 // document.getElementById('colors').setAttribute('required', ''); 
 // document.getElementById('quantity').setAttribute('required', ''); 
@@ -14,7 +15,8 @@ const getProduct = async (productId) => {
         const response = await fetch(urlToFetch);
         if (response.ok) {
             const jsonResponse = await response.json();
-            addProductOnPage(jsonResponse);
+            productFetched = jsonResponse;
+            addProductOnPage(productFetched);
         }
     } catch (error) {
         console.log(error);
@@ -123,6 +125,11 @@ addToCartBtn.onclick = () => {
         id: productId,
         quantity: productQty,
         color: productColor,
+        name: productFetched.name,
+        price: productFetched.price,
+        imageUrl: productFetched.imageUrl,
+        description: productFetched.description,
+        altTxt: productFetched.altTxt
     };
 
      //form validation for color & qty
