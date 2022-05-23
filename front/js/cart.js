@@ -172,6 +172,7 @@ for (let i = 0; i < inputsQty.length; i++) {
             })
 }
 
+//updating quantity and price totals
 const updateTotals = () => {
     let totalQuantity = document.getElementById('totalQuantity');
     let totalPrice = document.getElementById('totalPrice');
@@ -190,4 +191,77 @@ const updateTotals = () => {
 
 updateTotals();
 
+const orderBtn = document.getElementById('order'); // "order" button
+
+orderBtn.onclick = () => {
+    const firstName = document.getElementById('firstName');
+    const firstNameErr = document.getElementById('firstNameErrorMsg'); 
+    const lastName = document.getElementById('lastName'); 
+    const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
+    regexForName=/^[a-zA-Zàâéèëêïîôùüç'\s-]+$/; // regex for first name and last name
+    const address = document.getElementById('address');
+    const addressErrorMsg = document.getElementById('addressErrorMsg');
+    const city = document.getElementById('city');
+    const cityErrorMsg = document.getElementById('cityErrorMsg');
+    regexForAddress=/^[A-Za-z0-9àâéèëêïîôùüç'\.\-\s\,]+$/; // regex for address and city
+    const email = document.getElementById('email');
+    const emailErrorMsg = document.getElementById('emailErrorMsg');
+
+     //customer form validation
+     if (textValidation(firstName, firstNameErr, regexForName) && textValidation(lastName, lastNameErrorMsg, regexForName) 
+        && textValidation(address, addressErrorMsg, regexForAddress) && textValidation(city, cityErrorMsg, regexForAddress) ) {
+        console.log(textValidation(firstName, firstNameErr, regexForName));
+        console.log(textValidation(lastName, lastNameErrorMsg, regexForName));
+        console.log(textValidation(address, addressErrorMsg, regexForAddress));
+        console.log(textValidation(city, cityErrorMsg, regexForAddress));
+        //  console.log(emailValidation(email, emailErrorMsg));
+     };
+
+    // if (productColor && productQty > 0) {
+    //         cart.add(productToAdd);
+    //         window.location.assign('./cart.html');
+    // };
+
+}
+
+}
+
+const textValidation = (inputField, errField, regexValue) => {
+    
+    let inputValue = inputField.value.trim();
+    const inputArray = inputValue.split(' ');
+
+    //removing extra spaces between words
+    if (inputArray.length > 1) {
+        inputValue = '';
+        inputArray.forEach(element => {
+            if (element.trim() != '') {
+                inputValue = inputValue + ' ' + element;
+            }
+        }) 
+    }
+    
+    if(!regexValue.test(inputValue) && inputValue != ""){
+        errField.innerHTML = 'Saisie non valide';
+        return false;
+
+    }else{
+        errField.innerHTML="";
+        return inputValue.trim();
+    }
+}
+
+const emailValidation = (inputField, errField) => {
+    
+    let inputValue = inputField.value.trim();
+    regexValue=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
+    
+    if(!regexValue.test(inputValue) && inputValue != ""){
+        errField.innerHTML = 'Email non valide';
+        return false;
+
+    }else{
+        errField.innerHTML="";
+        return inputValue;
+    }
 }
