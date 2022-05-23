@@ -58,6 +58,16 @@ const cart = {
         //update localStorage
         cart.sync();
     },
+    change(key, qty){
+        //change the quantity of an item in the cart
+        cart.products = cart.products.map(item=>{
+            if(item.key === key)
+                item.quantity = parseInt(qty);
+            return item;
+        });
+        //update localStorage
+        cart.sync();
+    },
     remove(key){
         //remove an product entirely from the cart based on its key
         cart.products = cart.products.filter(item => {
@@ -141,25 +151,43 @@ const addProductsToCartPage = (products) => {
     });
 
 const deleteItems = Array.from(document.getElementsByClassName('deleteItem')); //convert HTMLcollections deleteItem to Array
-const inputsQty = Array.from(document.getElementsByClassName('itemQuantity')); //convert HTMLcollections ItemQty to Array
+const inputsQty = document.getElementsByClassName('itemQuantity');
 
-//onclick listener on all Delete buttons
+//click listener on all Delete buttons
 deleteItems.forEach(element => {
     element.addEventListener("click", () => {
         articleToDelete =  document.getElementById(element.id).closest('article');
         articleToDelete.remove(); //removing from DOM
         cart.remove(element.id); //removing from cart
+        updateTotals(); //updating total articles and price
     })
 })
 
-//onclick listener on all quantity inputs
-inputsQty.forEach(element => {
-    element.addEventListener("change", () => {
-        console.log(element.getAttribute('data-key'));
-        
+// Change listener on all quantity inputs
+for (let i = 0; i < inputsQty.length; i++) {
+    inputsQty[i].addEventListener("change", () => {
+                cart.change(inputsQty[i].getAttribute('data-key'), inputsQty[i].value);
+                //console.log(cart.products);
+                updateTotals(); //updating total articles and price
+            })
+}
 
-    })
-})
+const updateTotals = () => {
+    let totalQuantity = document.getElementById('totalQuantity');
+    let totalPrice = document.getElementById('totalPrice');
+    let qty = 0;
+    let price = 0;
 
+    cart.products.forEach(element => {
+            qty += element.quantity;
+            price += element.price * element.quantity;
+        }) 
+    
+    totalQuantity.innerHTML = qty;
+    totalPrice.innerHTML =  price;    
+    //console.log(cart.products);
+}
+
+updateTotals();
 
 }

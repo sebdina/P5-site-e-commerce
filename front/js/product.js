@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const addToCartBtn = document.getElementById('addToCart'); // "add to cart" button
 
 addToCartBtn.onclick = () => {
-    const productQty = document.getElementById('quantity').value; // product quantity 
+    const productQty = parseInt(document.getElementById('quantity').value); // product quantity 
     const productColor = document.getElementById('colors').value; // product color
 
     const productToAdd = {
