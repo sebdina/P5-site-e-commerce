@@ -190,61 +190,61 @@ const addProductsToCartPage = (products) => {
     }
 
     updateTotals();
+}
 
-    const orderBtn = document.getElementById('order'); // "order" button
+const orderBtn = document.getElementById('order'); // "order" button
+//orderBtn.setAttribute('type', 'button');
 
-    orderBtn.onclick = () => {
-        const firstName = document.getElementById('firstName');
-        const firstNameErr = document.getElementById('firstNameErrorMsg');
-        const lastName = document.getElementById('lastName');
-        const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
-        regexForName = /^[a-zA-Zàâéèëêïîôùüç'\s-]+$/; // regex for first name and last name
-        const address = document.getElementById('address');
-        const addressErrorMsg = document.getElementById('addressErrorMsg');
-        const city = document.getElementById('city');
-        const cityErrorMsg = document.getElementById('cityErrorMsg');
-        regexForAddress = /^[A-Za-z0-9àâéèëêïîôùüç'\.\-\s\,]+$/; // regex for address and city
-        const email = document.getElementById('email');
-        const emailErrorMsg = document.getElementById('emailErrorMsg');
+orderBtn.onclick = () => {
+    const firstName = document.getElementById('firstName');
+    const firstNameErr = document.getElementById('firstNameErrorMsg');
+    const lastName = document.getElementById('lastName');
+    const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
+    regexForName = /^[a-zA-Zàâéèëêïîôùüç'\s-]+$/; // regex for first name and last name
+    const address = document.getElementById('address');
+    const addressErrorMsg = document.getElementById('addressErrorMsg');
+    const city = document.getElementById('city');
+    const cityErrorMsg = document.getElementById('cityErrorMsg');
+    regexForAddress = /^[A-Za-z0-9àâéèëêïîôùüç'\.\-\s\,]+$/; // regex for address and city
+    const email = document.getElementById('email');
+    const emailErrorMsg = document.getElementById('emailErrorMsg');
 
-        //customer form validation
-        contactFirstName = textValidation(firstName, firstNameErr, regexForName);
-        contactLastName = textValidation(lastName, lastNameErrorMsg, regexForName);
-        contactAddress = textValidation(address, addressErrorMsg, regexForAddress);
-        contactCity = textValidation(city, cityErrorMsg, regexForAddress);
-        contactEmail = emailValidation(email, emailErrorMsg);
+    //customer form validation
+    contactFirstName = textValidation(firstName, firstNameErr, regexForName);
+    contactLastName = textValidation(lastName, lastNameErrorMsg, regexForName);
+    contactAddress = textValidation(address, addressErrorMsg, regexForAddress);
+    contactCity = textValidation(city, cityErrorMsg, regexForAddress);
+    contactEmail = emailValidation(email, emailErrorMsg);
 
-        //contact object to Post
-        const contactToPost = {
-            firstName: contactFirstName,
-            lastName: contactLastName,
-            address: contactAddress,
-            city: contactCity,
-            email: contactEmail,
-        }
-
-        //Array of product-ID to Post
-        const productsToPost = cart.products.map(product => {
-            return product.id;
-        });
-
-        console.log(productsToPost);
-
-
-        if (contactFirstName && contactLastName && contactAddress && contactCity && contactEmail) {
-
-            console.log(contactToPost);
-
-        };
-
-        // if (productColor && productQty > 0) {
-        //         cart.add(productToAdd);
-        //         window.location.assign('./cart.html');
-        // };
-
+    //contact object to Post
+    const contactToPost = {
+        firstName: contactFirstName,
+        lastName: contactLastName,
+        address: contactAddress,
+        city: contactCity,
+        email: contactEmail,
     }
 
+    //Array of product-ID to Post
+    const productsToPost = cart.products.map(product => {
+        return product.id;
+    });
+
+    console.log(productsToPost);
+
+
+    if (contactFirstName && contactLastName && contactAddress && contactCity) {
+
+        console.log(contactToPost);
+        //const orderId = '1234';
+        window.location.assign('./confirmation.html');
+        //window.location.assign(`./confirmation.html?id=${orderId}`); 
+
+    };
+
 }
+
+
 
 const textValidation = (inputField, errField, regexValue) => {
 
