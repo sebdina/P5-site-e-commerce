@@ -26,38 +26,6 @@ const cart = {
         });
         if (match) return match[0];
     },
-    //add a new item to the cart
-    add(product) {
-        //check that it is not in the cart already
-        if (cart.find(product.key)) {
-            cart.increase(product.key);
-
-        } else {
-            cart.products.push(product);
-            //update localStorage
-            cart.sync();
-        }
-    },
-    increase(key) {
-        //increase the quantity of an item in the cart
-        cart.products = cart.products.map(item => {
-            if (item.key === key)
-                item.quantity++;
-            return item;
-        });
-        //update localStorage
-        cart.sync();
-    },
-    reduce(key) {
-        //decrease the quantity of an item in the cart
-        cart.products = cart.products.map(item => {
-            if (item.key === key)
-                item.quantity--;
-            return item;
-        });
-        //update localStorage
-        cart.sync();
-    },
     change(key, qty) {
         //change the quantity of an item in the cart
         cart.products = cart.products.map(item => {
@@ -210,6 +178,35 @@ orderBtn.setAttribute('type', 'button'); //to prevent automatic HTML validation
 //     textValidation(firstName, firstNameErr, regexForName);
 // })
 
+// fetch order on kanap Post route, async await function
+const postOrder = async (clientContact, productIds) => {
+    const orderRequestParam = '/order';
+    const urlToFetch = `${kanapCatalogBaseUrl}${orderRequestParam}`;
+    const fetchBody = JSON.stringify(clientContact);
+
+    console.log(fetchBody);
+    console.log(urlToFetch);    
+
+    try {
+        const response = await fetch(urlToFetch, {
+            method: 'POST',
+            body: {"contact": {"firstName": "Jean",
+                                "lastName": "Boyer",
+                                "address": "32 Rue Gaulle",
+                                "city": "St Gilles",
+                                "email": "devweb@dinamorgabine.com"},
+                    "products": ["107fb5b75607497b96722bda5b504926"]}
+        });
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log(jsonResponse);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
 orderBtn.onclick = () => {
     const firstName = document.getElementById('firstName');
     const firstNameErr = document.getElementById('firstNameErrorMsg');
@@ -269,41 +266,42 @@ orderBtn.onclick = () => {
         };
     }
 
-    //contact object to Post
-    const contactToPost = {
-        firstName: contactFirstName,
-        lastName: contactLastName,
-        address: contactAddress,
-        city: contactCity,
-        email: contactEmail,
-    }
-
     //Array of product-ID to Post
     const productsToPost = cart.products.map(product => {
         return product.id;
     });
 
-    //console.log(productsToPost);
+    //contact object to Post
+    const contactToPost = {
+        contact: {
+            firstName: contactFirstName,
+            lastName: contactLastName,
+            address: contactAddress,
+            city: contactCity,
+            email: contactEmail,
+        },
+        products: productsToPost, 
+    }
 
 
-    if (contactFirstName && contactLastName && contactAddress && contactCity && contactEmail) {
 
+    if (contactFirstName && contactLastName && contactAddress && contactCity && contactEmail && productsToPost.length > 0) {
+
+        console.log(productsToPost);
         console.log(contactToPost);
         const orderId = '1234';
+        postOrder(contactToPost, productsToPost);
         //window.location.assign('./confirmation.html');
-        window.location.assign(`./confirmation.html?id=${orderId}`);
+        //window.location.assign(`./confirmation.html?id=${orderId}`);
 
     };
 
 }
 
-
 const textValidation = (inputField, errField, regexValue) => {
 
     let inputValue = inputField.value.trim();
     const inputArray = inputValue.split(' ');
-
-    console.log(inputField);
 
     //removing extra spaces between words
     if (inputArray.length > 1) {

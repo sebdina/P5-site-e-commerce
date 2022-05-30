@@ -88,7 +88,8 @@ const cart = {
     add(product) {
         //check that it is not in the cart already
         if (cart.find(product.key)) {
-            const newQty = product.quantity + cart.find(product.key).quantity; //adding new quantity to existing product qty
+            let newQty = product.quantity + cart.find(product.key).quantity; //adding new quantity to existing product qty
+            if (newQty > 100) {newQty = 100}
             cart.change(product.key, newQty);
             
         } else {
