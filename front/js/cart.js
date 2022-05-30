@@ -174,12 +174,12 @@ const addProductsToCartPage = (products) => {
                     inputsQty[i].setCustomValidity(''); //removing warning message on click
                 };
             }
-            if (inputsQty[i].value > 0 && inputsQty[i].value <101) {
+            if (inputsQty[i].value > 0 && inputsQty[i].value < 101) {
                 cart.change(inputsQty[i].getAttribute('data-key'), inputsQty[i].value);
                 //console.log(cart.products);
                 updateTotals(); //updating total articles and price
             };
-            
+
         })
     }
 
@@ -204,7 +204,11 @@ const addProductsToCartPage = (products) => {
 }
 
 const orderBtn = document.getElementById('order'); // "order" button
-//orderBtn.setAttribute('type', 'button');
+orderBtn.setAttribute('type', 'button'); //to prevent automatic HTML validation
+
+// firstName.addEventListener("input", () => {
+//     textValidation(firstName, firstNameErr, regexForName);
+// })
 
 orderBtn.onclick = () => {
     const firstName = document.getElementById('firstName');
@@ -219,13 +223,51 @@ orderBtn.onclick = () => {
     regexForAddress = /^[A-Za-z0-9àâéèëêïîôùüç'\.\-\s\,]+$/; // regex for address and city
     const email = document.getElementById('email');
     const emailErrorMsg = document.getElementById('emailErrorMsg');
-
+    regexForEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
     //customer form validation
     contactFirstName = textValidation(firstName, firstNameErr, regexForName);
     contactLastName = textValidation(lastName, lastNameErrorMsg, regexForName);
     contactAddress = textValidation(address, addressErrorMsg, regexForAddress);
     contactCity = textValidation(city, cityErrorMsg, regexForAddress);
-    contactEmail = emailValidation(email, emailErrorMsg);
+    contactEmail = emailValidation(email, emailErrorMsg, regexForEmail);
+
+    //empty inputs validation using Constraint validation API methods
+    if (contactFirstName === '') {
+        firstName.setCustomValidity("veuillez renseigner votre prénom !");
+        firstName.reportValidity();
+        firstName.focus();
+        firstName.onclick = () => {
+            firstName.setCustomValidity(''); //removing warning message on click
+        };
+    } else if (contactLastName === '') {
+        lastName.setCustomValidity("veuillez renseigner votre nom !");
+        lastName.reportValidity();
+        lastName.focus();
+        lastName.onclick = () => {
+            lastName.setCustomValidity(''); //removing warning message on click
+        };
+    } else if (contactAddress === '') {
+        address.setCustomValidity("veuillez renseigner votre adresse !");
+        address.reportValidity();
+        address.focus();
+        address.onclick = () => {
+            address.setCustomValidity(''); //removing warning message on click
+        };
+    } else if (contactCity === '') {
+        city.setCustomValidity("veuillez renseigner votre ville !");
+        city.reportValidity();
+        city.focus();
+        city.onclick = () => {
+            city.setCustomValidity(''); //removing warning message on click
+        };
+    } else if (contactEmail === '') {
+        email.setCustomValidity("veuillez renseigner votre email !");
+        email.reportValidity();
+        email.focus();
+        email.onclick = () => {
+            email.setCustomValidity(''); //removing warning message on click
+        };
+    }
 
     //contact object to Post
     const contactToPost = {
@@ -241,26 +283,27 @@ orderBtn.onclick = () => {
         return product.id;
     });
 
-    console.log(productsToPost);
+    //console.log(productsToPost);
 
 
-    if (contactFirstName && contactLastName && contactAddress && contactCity) {
+    if (contactFirstName && contactLastName && contactAddress && contactCity && contactEmail) {
 
         console.log(contactToPost);
-        //const orderId = '1234';
-        window.location.assign('./confirmation.html');
-        //window.location.assign(`./confirmation.html?id=${orderId}`); 
+        const orderId = '1234';
+        //window.location.assign('./confirmation.html');
+        window.location.assign(`./confirmation.html?id=${orderId}`);
 
     };
 
 }
 
 
-
 const textValidation = (inputField, errField, regexValue) => {
 
     let inputValue = inputField.value.trim();
     const inputArray = inputValue.split(' ');
+
+    console.log(inputField);
 
     //removing extra spaces between words
     if (inputArray.length > 1) {
@@ -271,8 +314,10 @@ const textValidation = (inputField, errField, regexValue) => {
             }
         })
     }
+    if (inputValue === "") {
+        return '';
 
-    if (!regexValue.test(inputValue) && inputValue != "") {
+    } else if (!regexValue.test(inputValue) && inputValue != "") {
         errField.innerHTML = 'Saisie non valide';
         return false;
 
@@ -282,12 +327,13 @@ const textValidation = (inputField, errField, regexValue) => {
     }
 }
 
-const emailValidation = (inputField, errField) => {
+const emailValidation = (inputField, errField, regexValue) => {
 
     let inputValue = inputField.value.trim();
-    regexValue = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 
-    if (!regexValue.test(inputValue) && inputValue != "") {
+    if (inputValue === "") {
+        return '';
+    } else if (!regexValue.test(inputValue) && inputValue != "") {
         errField.innerHTML = 'Email non valide';
         return false;
 
