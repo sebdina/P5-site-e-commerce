@@ -166,9 +166,20 @@ const addProductsToCartPage = (products) => {
     // Change listener on all quantity inputs
     for (let i = 0; i < inputsQty.length; i++) {
         inputsQty[i].addEventListener("change", () => {
-            cart.change(inputsQty[i].getAttribute('data-key'), inputsQty[i].value);
-            //console.log(cart.products);
-            updateTotals(); //updating total articles and price
+            if (inputsQty[i].value < 1 || inputsQty[i].value > 99) {
+                inputsQty[i].setCustomValidity("veuillez renseigner un nombre d'articles entre 1 et 100 !");
+                inputsQty[i].reportValidity();
+                inputsQty[i].focus();
+                inputsQty[i].onclick = () => {
+                    inputsQty[i].setCustomValidity(''); //removing warning message on click
+                };
+            }
+            if (inputsQty[i].value > 0 && inputsQty[i].value <101) {
+                cart.change(inputsQty[i].getAttribute('data-key'), inputsQty[i].value);
+                //console.log(cart.products);
+                updateTotals(); //updating total articles and price
+            };
+            
         })
     }
 

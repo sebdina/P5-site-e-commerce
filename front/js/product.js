@@ -88,7 +88,8 @@ const cart = {
     add(product) {
         //check that it is not in the cart already
         if (cart.find(product.key)) {
-            cart.increase(product.key);
+            const newQty = product.quantity + cart.find(product.key).quantity; //adding new quantity to existing product qty
+            cart.change(product.key, newQty);
             
         } else {
             cart.products.push(product);
@@ -96,16 +97,26 @@ const cart = {
             cart.sync();
         }
     },
-    increase(key){
-        //increase the quantity of an item in the cart
-        cart.products = cart.products.map(item=>{
-            if(item.key === key)
-                item.quantity++;
+    change(key, qty) {
+        //change the quantity of an item in the cart
+        cart.products = cart.products.map(item => {
+            if (item.key === key)
+                item.quantity = parseInt(qty);
             return item;
         });
         //update localStorage
         cart.sync();
     },
+    // increase(key){
+    //     //increase the quantity of an item in the cart
+    //     cart.products = cart.products.map(item=>{
+    //         if(item.key === key)
+    //             item.quantity++;
+    //         return item;
+    //     });
+    //     //update localStorage
+    //     cart.sync();
+    // },
 };
 
 //after page is loaded get cart from localStorage to cart object
@@ -140,8 +151,8 @@ addToCartBtn.onclick = () => {
         document.getElementById('colors').onclick = () => {
             document.getElementById('quantity').setCustomValidity(''); //removing warning message on click
         };
-    } else if (productQty < 1) {
-        document.getElementById('quantity').setCustomValidity("veuillez renseigner un nombre d'articles !");
+    } else if (productQty < 1 || productQty > 99) {
+        document.getElementById('quantity').setCustomValidity("veuillez renseigner un nombre d'articles entre 1 et 100 !");
         document.getElementById('quantity').reportValidity();
         document.getElementById('quantity').focus();
         document.getElementById('quantity').onclick = () => {
@@ -149,7 +160,7 @@ addToCartBtn.onclick = () => {
         };
     }
 
-    if (productColor && productQty > 0) {
+    if (productColor && (productQty > 0 && productQty <101)) {
             cart.add(productToAdd);
             window.location.assign('./cart.html');
     };
