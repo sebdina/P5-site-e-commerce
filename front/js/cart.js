@@ -179,27 +179,27 @@ orderBtn.setAttribute('type', 'button'); //to prevent automatic HTML validation
 // })
 
 // fetch order on kanap Post route, async await function
-const postOrder = async (clientContact, productIds) => {
+const postOrder = async (objecToPost) => {
     const orderRequestParam = '/order';
     const urlToFetch = `${kanapCatalogBaseUrl}${orderRequestParam}`;
-    const fetchBody = JSON.stringify(clientContact);
+    const fetchBody = JSON.stringify(objecToPost);
+    //let fetchedOrderId = '';
 
-    console.log(fetchBody);
-    console.log(urlToFetch);    
+    // console.log(fetchBody);
+    // console.log(urlToFetch);    
 
     try {
         const response = await fetch(urlToFetch, {
             method: 'POST',
-            body: {"contact": {"firstName": "Jean",
-                                "lastName": "Boyer",
-                                "address": "32 Rue Gaulle",
-                                "city": "St Gilles",
-                                "email": "devweb@dinamorgabine.com"},
-                    "products": ["107fb5b75607497b96722bda5b504926"]}
+            headers: { 'content-type': 'application/json' },
+            body: fetchBody
         });
         if (response.ok) {
             const jsonResponse = await response.json();
-            console.log(jsonResponse);
+            //console.log(jsonResponse.orderId);
+            const fetchedOrderId = jsonResponse.orderId;
+            console.log(fetchedOrderId);
+            window.location.assign(`./confirmation.html?id=${fetchedOrderId}`);
         }
     } catch (error) {
         console.log(error);
@@ -272,7 +272,7 @@ orderBtn.onclick = () => {
     });
 
     //contact object to Post
-    const contactToPost = {
+    const objectToPost = {
         contact: {
             firstName: contactFirstName,
             lastName: contactLastName,
@@ -288,11 +288,11 @@ orderBtn.onclick = () => {
     if (contactFirstName && contactLastName && contactAddress && contactCity && contactEmail && productsToPost.length > 0) {
 
         console.log(productsToPost);
-        console.log(contactToPost);
-        const orderId = '1234';
-        postOrder(contactToPost, productsToPost);
+        console.log(objectToPost);
+        //const orderId = '1234';
+        postOrder(objectToPost);
         //window.location.assign('./confirmation.html');
-        //window.location.assign(`./confirmation.html?id=${orderId}`);
+       
 
     };
 
