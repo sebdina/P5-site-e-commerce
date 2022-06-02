@@ -47,14 +47,11 @@ const cart = {
 };
 
 //after page is loaded get cart from localStorage to cart object
-document.addEventListener('DOMContentLoaded', () => {
+//document.addEventListener('DOMContentLoaded', () => {
     //localStorage.clear();
     cart.init();
-    addProductsToCartPage(cart.products);
-});
 
-
-//create DOM objects for each results object of the Kanap cart to display on the cartpage
+    //create DOM objects for each results object of the Kanap cart to display on the cartpage
 const addProductsToCartPage = (products) => {
 
     const cartItems = document.getElementById('cart__items');
@@ -170,6 +167,9 @@ const addProductsToCartPage = (products) => {
 
     updateTotals();
 }
+    addProductsToCartPage(cart.products);
+//});
+
 
 const orderBtn = document.getElementById('order'); // "order" button
 orderBtn.setAttribute('type', 'button'); //to prevent automatic HTML validation
@@ -198,7 +198,6 @@ const postOrder = async (objecToPost) => {
             const jsonResponse = await response.json();
             //console.log(jsonResponse.orderId);
             const fetchedOrderId = jsonResponse.orderId;
-            console.log(fetchedOrderId);
             window.location.assign(`./confirmation.html?id=${fetchedOrderId}`);
         }
     } catch (error) {
