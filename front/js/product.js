@@ -121,10 +121,12 @@ const cart = {
 };
 
 //after page is loaded get cart from localStorage to cart object
-document.addEventListener('DOMContentLoaded', () => {
+//document.addEventListener('DOMContentLoaded', () => {
+    
     //localStorage.clear();
-    cart.init();
-});
+    cart.init(); //get cart from localStorage to cart object
+
+//});
 
 const addToCartBtn = document.getElementById('addToCart'); // "add to cart" button
 

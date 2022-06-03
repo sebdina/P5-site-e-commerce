@@ -48,8 +48,32 @@ const cart = {
 
 //after page is loaded get cart from localStorage to cart object
 //document.addEventListener('DOMContentLoaded', () => {
+
     //localStorage.clear();
-    cart.init();
+    cart.init();//get cart from localStorage to cart object
+
+// fetch product details from kanap catalog by product-ID, async await function
+const getProductDetails = async (productId) => {
+    const productRequestParam = `/${productId}`;
+    const urlToFetch = `${kanapCatalogBaseUrl}${productRequestParam}`;
+
+    try {
+        const response = await fetch(urlToFetch);
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            addDetailsToProduct(jsonResponse);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+    cart.products.forEach(element => {
+        getProductDetails(element.id);
+        console.log(element.id);
+
+    });
+
 
     //create DOM objects for each results object of the Kanap cart to display on the cartpage
 const addProductsToCartPage = (products) => {
@@ -174,17 +198,11 @@ const addProductsToCartPage = (products) => {
 const orderBtn = document.getElementById('order'); // "order" button
 orderBtn.setAttribute('type', 'button'); //to prevent automatic HTML validation
 
-// firstName.addEventListener("input", () => {
-//     textValidation(firstName, firstNameErr, regexForName);
-// })
-
 // fetch order on kanap Post route, async await function
 const postOrder = async (objecToPost) => {
     const orderRequestParam = '/order';
     const urlToFetch = `${kanapCatalogBaseUrl}${orderRequestParam}`;
     const fetchBody = JSON.stringify(objecToPost);
-    //let fetchedOrderId = '';
-
     // console.log(fetchBody);
     // console.log(urlToFetch);    
 
@@ -232,36 +250,36 @@ orderBtn.onclick = () => {
         firstName.setCustomValidity("veuillez renseigner votre prénom !");
         firstName.reportValidity();
         firstName.focus();
-        firstName.onclick = () => {
-            firstName.setCustomValidity(''); //removing warning message on click
+        firstName.oninput = () => {
+            firstName.setCustomValidity(''); //removing warning message on input
         };
     } else if (contactLastName === '') {
         lastName.setCustomValidity("veuillez renseigner votre nom !");
         lastName.reportValidity();
         lastName.focus();
-        lastName.onclick = () => {
-            lastName.setCustomValidity(''); //removing warning message on click
+        lastName.oninput = () => {
+            lastName.setCustomValidity(''); //removing warning message on input
         };
     } else if (contactAddress === '') {
         address.setCustomValidity("veuillez renseigner votre adresse !");
         address.reportValidity();
         address.focus();
-        address.onclick = () => {
-            address.setCustomValidity(''); //removing warning message on click
+        address.oninput = () => {
+            address.setCustomValidity(''); //removing warning message on input
         };
     } else if (contactCity === '') {
         city.setCustomValidity("veuillez renseigner votre ville !");
         city.reportValidity();
         city.focus();
-        city.onclick = () => {
-            city.setCustomValidity(''); //removing warning message on click
+        city.oninput = () => {
+            city.setCustomValidity(''); //removing warning message on input
         };
     } else if (contactEmail === '') {
         email.setCustomValidity("veuillez renseigner votre email !");
         email.reportValidity();
         email.focus();
-        email.onclick = () => {
-            email.setCustomValidity(''); //removing warning message on click
+        email.oninput = () => {
+            email.setCustomValidity(''); //removing warning message on input
         };
     }
 
@@ -288,11 +306,8 @@ orderBtn.onclick = () => {
 
         console.log(productsToPost);
         console.log(objectToPost);
-        //const orderId = '1234';
         postOrder(objectToPost);
-        //window.location.assign('./confirmation.html');
        
-
     };
 
 }
