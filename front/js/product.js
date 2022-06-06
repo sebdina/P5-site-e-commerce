@@ -139,11 +139,11 @@ addToCartBtn.onclick = () => {
         id: productId,
         quantity: productQty,
         color: productColor,
-        name: productFetched.name,
-        price: productFetched.price,
-        imageUrl: productFetched.imageUrl,
-        description: productFetched.description,
-        altTxt: productFetched.altTxt
+        // name: productFetched.name,
+        // price: productFetched.price,
+        // imageUrl: productFetched.imageUrl,
+        // description: productFetched.description,
+        // altTxt: productFetched.altTxt
     };
 
      //form validation for color & qty
