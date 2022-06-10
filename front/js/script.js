@@ -1,9 +1,7 @@
 
-//const fetch = require('node-fetch'); //to correct ReferenceError: fetch is not defined with node
-
 const kanapCatalogBaseUrl = 'http://localhost:3000/api/products';// base url to access Kanap catalog
 
-// fetch objects from the kanap catalog, async await function
+// fetch all products from the kanap catalog, async await function
 const getHomeProducts = async () => {
     const allProductsRequestParam = '/';
     const urlToFetch = `${kanapCatalogBaseUrl}${allProductsRequestParam}`;
@@ -20,7 +18,7 @@ const getHomeProducts = async () => {
 
 }
 
-//create DOM objects for each results object of the Kanap catalog to display on the homepage
+//create DOM objects for each results product of the Kanap catalog to display on the homepage
 const addProductsToHome = (products) => {
 
     const items = document.getElementById('items');

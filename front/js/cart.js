@@ -8,7 +8,7 @@ const cart = {
         //check localStorage and initialize cart products
         const storageProducts = localStorage.getItem(cart.key);
         if (storageProducts) {
-            cart.products = JSON.parse(storageProducts); //to array of objects to store in cart object
+            cart.products = JSON.parse(storageProducts); //array of objects to store in cart object
         } else {
             //if localStorage empty set an empty array
             cart.products = [];
@@ -16,7 +16,7 @@ const cart = {
         }
     },
     async sync() {
-        const cartToSync = JSON.stringify(cart.products); // to string to send to localStorage
+        const cartToSync = JSON.stringify(cart.products); //string to send to localStorage
         await localStorage.setItem(cart.key, cartToSync);
     },
     find(key) {
@@ -24,13 +24,7 @@ const cart = {
         const match = cart.products.filter(item => {
             return item.key === key;
         });
-        if (match) return cart.products.indexOf(match[0]);
-        // cart.products.forEach(element => {
-        //     if (element.key === key) {
-        //         console.log(cart.products.indexOf(element));
-        //         return cart.products.indexOf(element);
-        //     } else {return null}
-        // });
+        if (match) return cart.products.indexOf(match[0]); //if product exists return its index
     },
     change(key, qty) {
         //change the quantity of an item in the cart
@@ -54,20 +48,17 @@ const cart = {
         //adding details to the cart product in order to avoid storing it in local
         const index = cart.find(productKey);
         if (index >= 0) {
-            Object.assign(cart.products[index], productDetails);
+            Object.assign(cart.products[index], productDetails); //adding object details to object product
         } else {
             console.log('product not found');
         }
     },
 };
 
-//after page is loaded get cart from localStorage to cart object
-//document.addEventListener('DOMContentLoaded', () => {
-
 //localStorage.clear();
 cart.init();//get cart from localStorage to cart object
 
-//updating quantity and price totals
+//updating quantity and price totals in DOM elements
 const updateTotals = () => {
     let totalQuantity = document.getElementById('totalQuantity');
     let totalPrice = document.getElementById('totalPrice');
@@ -75,26 +66,26 @@ const updateTotals = () => {
     let price = 0;
 
     cart.products.forEach(element => {
-        qty += element.quantity;
-        price += element.price * element.quantity;
+        qty += element.quantity; //adding quantities
+        price += element.price * element.quantity; // calculating total price
     })
 
     totalQuantity.innerHTML = qty;
     totalPrice.innerHTML = price;
-    //console.log(cart.products);
 }
 
 //create DOM objects for each results object of the Kanap cart to display on the cartpage
 const addProductToCartPage = (product) => {
 
+    //Article
     const cartItems = document.getElementById('cart__items');
-
     const article = document.createElement('article');
     article.setAttribute('class', "cart__item");
     article.setAttribute('data-id', product.id);
     article.setAttribute('data-color', product.color);
     cartItems.appendChild(article);
 
+    //Image
     const imgDiv = document.createElement('div');
     imgDiv.setAttribute('class', "cart__item__img");
     article.appendChild(imgDiv);
@@ -109,13 +100,13 @@ const addProductToCartPage = (product) => {
     const descriptionDiv = document.createElement('div');
     descriptionDiv.setAttribute('class', "cart__item__content__description");
     contentDiv.appendChild(descriptionDiv);
-    const name = document.createElement('h2');
+    const name = document.createElement('h2'); //Name
     name.innerHTML = product.name;
     contentDiv.appendChild(name);
-    const color = document.createElement('p');
+    const color = document.createElement('p'); //Color
     color.innerHTML = product.color;
     contentDiv.appendChild(color);
-    const price = document.createElement('p');
+    const price = document.createElement('p'); //Price
     price.innerHTML = product.price + ' €';
     contentDiv.appendChild(price);
     const settingsDiv = document.createElement('div');
@@ -124,29 +115,26 @@ const addProductToCartPage = (product) => {
     const settingsQtyDiv = document.createElement('div');
     settingsQtyDiv.setAttribute('class', "cart__item__content__settings__quantity");
     settingsDiv.appendChild(settingsQtyDiv);
-    const quantity = document.createElement('p');
+    const quantity = document.createElement('p'); //Quantity
     quantity.innerHTML = 'Qté : ';
     settingsQtyDiv.appendChild(quantity);
-    const inputQty = document.createElement('input');
+    const inputQty = document.createElement('input'); //Input Quantity
     inputQty.setAttribute('type', "number");
     inputQty.setAttribute('class', "itemQuantity");
     inputQty.setAttribute('name', "itemQuantity");
     inputQty.setAttribute('min', "1");
     inputQty.setAttribute('max', "100");
     inputQty.setAttribute('value', product.quantity);
-    inputQty.setAttribute('data-key', product.key);
+    inputQty.setAttribute('data-key', product.key); // adding data-key attribute with product-key value
     settingsQtyDiv.appendChild(inputQty);
     const deleteDiv = document.createElement('div');
     deleteDiv.setAttribute('class', "cart__item__content__settings__delete");
     settingsDiv.appendChild(deleteDiv);
-    const deleteItem = document.createElement('p');
+    const deleteItem = document.createElement('p'); // Delete item
     deleteItem.setAttribute('class', "deleteItem");
-    deleteItem.setAttribute('id', product.key);
+    deleteItem.setAttribute('id', product.key); // adding id attribute with product-key value
     deleteItem.innerHTML = 'Supprimer';
     deleteDiv.appendChild(deleteItem);
-
-    //const deleteItems = Array.from(document.getElementsByClassName('deleteItem')); //convert HTMLcollections deleteItem to Array
-    //const inputsQty = document.getElementsByClassName('itemQuantity');
 
     //click listener on Delete button  
     deleteItem.addEventListener("click", () => {
@@ -168,7 +156,6 @@ const addProductToCartPage = (product) => {
         }
         if (inputQty.value > 0 && inputQty.value < 101) {
             cart.change(inputQty.getAttribute('data-key'), inputQty.value);
-            //console.log(cart.products);
             updateTotals(); //updating total articles and price
         };
 
@@ -187,15 +174,17 @@ const getProductDetails = async (product) => {
         if (response.ok) {
             const jsonResponse = await response.json();
             delete jsonResponse._id; //removing id from product details
-            delete jsonResponse.colors; //removing id from product details
-            cart.addDetails(product.key, jsonResponse);
-            addProductToCartPage(product);
+            delete jsonResponse.colors; //removing colors from product details
+            cart.addDetails(product.key, jsonResponse);// adding details to product in cart
+            addProductToCartPage(product);// adding product to page
         }
     } catch (error) {
         console.log(error);
     }
 
 }
+
+//For each product in  cart, fetching and adding its detail
 cart.products.forEach(element => {
     getProductDetails(element);
 });
@@ -204,13 +193,11 @@ cart.products.forEach(element => {
 const orderBtn = document.getElementById('order'); // "order" button
 orderBtn.setAttribute('type', 'button'); //to prevent automatic HTML validation
 
-// fetch order on kanap Post route, async await function
+// fetch Post order on kanap Post route, async await function
 const postOrder = async (objecToPost) => {
     const orderRequestParam = '/order';
     const urlToFetch = `${kanapCatalogBaseUrl}${orderRequestParam}`;
-    const fetchBody = JSON.stringify(objecToPost);
-    // console.log(fetchBody);
-    // console.log(urlToFetch);    
+    const fetchBody = JSON.stringify(objecToPost);  
 
     try {
         const response = await fetch(urlToFetch, {
@@ -220,9 +207,8 @@ const postOrder = async (objecToPost) => {
         });
         if (response.ok) {
             const jsonResponse = await response.json();
-            //console.log(jsonResponse.orderId);
             const fetchedOrderId = jsonResponse.orderId;
-            window.location.assign(`./confirmation.html?id=${fetchedOrderId}`);
+            window.location.assign(`./confirmation.html?id=${fetchedOrderId}`); //opening confirmation page with orderId in parameter
         }
     } catch (error) {
         console.log(error);
@@ -230,6 +216,7 @@ const postOrder = async (objecToPost) => {
 
 }
 
+// form validation on order button click
 orderBtn.onclick = () => {
     const firstName = document.getElementById('firstName');
     const firstNameErr = document.getElementById('firstNameErrorMsg');
@@ -307,7 +294,7 @@ orderBtn.onclick = () => {
     }
 
 
-
+    //validation before sending Post order
     if (contactFirstName && contactLastName && contactAddress && contactCity && contactEmail && productsToPost.length > 0) {
 
         postOrder(objectToPost);
@@ -316,6 +303,7 @@ orderBtn.onclick = () => {
 
 }
 
+//imput text validation using regex and triming unecessary empty spaces
 const textValidation = (inputField, errField, regexValue) => {
 
     let inputValue = inputField.value.trim();
@@ -343,6 +331,7 @@ const textValidation = (inputField, errField, regexValue) => {
     }
 }
 
+//email form validation using regex
 const emailValidation = (inputField, errField, regexValue) => {
 
     let inputValue = inputField.value.trim();

@@ -1,10 +1,6 @@
 const kanapCatalogBaseUrl = 'http://localhost:3000/api/products';// base url to access Kanap catalog
-const urlParams = (new URL(document.location)).searchParams;
-const productId = urlParams.get('id'); //retrieving product-id from url
-let productFetched = {}; // object to save fetched product from kanap catalog
-
-// document.getElementById('colors').setAttribute('required', ''); 
-// document.getElementById('quantity').setAttribute('required', ''); 
+const urlParams = (new URL(document.location)).searchParams;// retrieving parameters from URL
+const productId = urlParams.get('id'); //retrieving product-id from parameters
 
 // fetch product from kanap catalog by product-ID, async await function
 const getProduct = async (productId) => {
@@ -15,8 +11,7 @@ const getProduct = async (productId) => {
         const response = await fetch(urlToFetch);
         if (response.ok) {
             const jsonResponse = await response.json();
-            productFetched = jsonResponse;
-            addProductOnPage(productFetched);
+            addProductOnPage(jsonResponse);
         }
     } catch (error) {
         console.log(error);
@@ -24,7 +19,7 @@ const getProduct = async (productId) => {
 
 }
 
-//create DOM objects for each parameter of the Kanap Product to display on product page
+//create DOM objects for each info of the Kanap Product to display on product page
 const addProductOnPage = (product) => {
 
     //displaying product image
@@ -48,7 +43,6 @@ const addProductOnPage = (product) => {
 
     //displaying product colors
     const colors = document.getElementById('colors');
-
     product.colors.forEach(element => {
         const option = document.createElement('option');
         option.value = element;
@@ -66,7 +60,7 @@ const cart = {
         //check localStorage and initialize cart products
         const storageProducts = localStorage.getItem(cart.key);
         if (storageProducts) {
-            cart.products = JSON.parse(storageProducts); //to array of objects to store in cart object
+            cart.products = JSON.parse(storageProducts); //array of objects to store in cart object
         } else {
             //if localStorage empty set an empty array
             cart.products = [];
@@ -74,6 +68,7 @@ const cart = {
         }
     },
     async sync() {
+        // sending cart products to local storage
         const cartToSync = JSON.stringify(cart.products); // to string to send to localStorage
         await localStorage.setItem(cart.key, cartToSync);
     },
@@ -84,19 +79,18 @@ const cart = {
         });
         if (match) return match[0];
     },
-     //add a new item to the cart
+    //add a new item to the cart
     add(product) {
         //check that it is not in the cart already
         if (cart.find(product.key)) {
             let newQty = product.quantity + cart.find(product.key).quantity; //adding new quantity to existing product qty
-            if (newQty > 100) {newQty = 100}
+            if (newQty > 100) { newQty = 100 } //preventing quantity to be supérior to 100
             cart.change(product.key, newQty);
-            
         } else {
             cart.products.push(product);
-            //update localStorage
-            cart.sync();
         }
+        //update localStorage
+        cart.sync();
     },
     change(key, qty) {
         //change the quantity of an item in the cart
@@ -108,25 +102,10 @@ const cart = {
         //update localStorage
         cart.sync();
     },
-    // increase(key){
-    //     //increase the quantity of an item in the cart
-    //     cart.products = cart.products.map(item=>{
-    //         if(item.key === key)
-    //             item.quantity++;
-    //         return item;
-    //     });
-    //     //update localStorage
-    //     cart.sync();
-    // },
 };
 
-//after page is loaded get cart from localStorage to cart object
-//document.addEventListener('DOMContentLoaded', () => {
-    
-    //localStorage.clear();
-    cart.init(); //get cart from localStorage to cart object
-
-//});
+//localStorage.clear();
+cart.init(); //copy cart from localStorage to cart object
 
 const addToCartBtn = document.getElementById('addToCart'); // "add to cart" button
 
@@ -139,15 +118,10 @@ addToCartBtn.onclick = () => {
         id: productId,
         quantity: productQty,
         color: productColor,
-        // name: productFetched.name,
-        // price: productFetched.price,
-        // imageUrl: productFetched.imageUrl,
-        // description: productFetched.description,
-        // altTxt: productFetched.altTxt
     };
 
-     //form validation for color & qty
-     if (!productColor) {
+    //form validation for color (should be selected) & quantity (between 1 and 100)
+    if (!productColor) {
         document.getElementById('colors').setCustomValidity("veuillez renseigner une couleur !");
         document.getElementById('colors').reportValidity();
         document.getElementById('colors').focus();
@@ -163,11 +137,11 @@ addToCartBtn.onclick = () => {
         };
     }
 
-    if (productColor && (productQty > 0 && productQty <101)) {
-            cart.add(productToAdd);
-            window.location.assign('./cart.html');
+    if (productColor && (productQty > 0 && productQty < 101)) {
+        cart.add(productToAdd);
+        window.location.assign('./cart.html'); //opening cart page
     };
 
 }
 
-getProduct(productId);
+getProduct(productId); //retrieving product from kanap catalog
