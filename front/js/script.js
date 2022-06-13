@@ -7,35 +7,36 @@ const getHomeProducts = async () => {
     const urlToFetch = `${kanapCatalogBaseUrl}${allProductsRequestParam}`;
 
     try {
-        const response = await fetch(urlToFetch);
+        const response = await fetch(urlToFetch); // await fetching
         if (response.ok) {
-            const jsonResponse = await response.json();
+            const jsonResponse = await response.json();// if promise ok getting json response
             addProductsToHome(jsonResponse);
         }
     } catch (error) {
-        console.log(error);
+        console.log(error); // if reponse not ok catching error
     }
 
 }
 
 //create DOM objects for each results product of the Kanap catalog to display on the homepage
 const addProductsToHome = (products) => {
-
-    const items = document.getElementById('items');
-
+    const items = document.getElementById('items'); //getting items section
     products.forEach(element => {
+        //creating necessary elements
         const link = document.createElement('a');
         const article = document.createElement('article');
         const image = document.createElement('img');
         const title = document.createElement('h3');
         const texte = document.createElement('p');
 
-        link.href = `./product.html?id=${element._id}`;
+        //adding attributes and contents
+        link.href = `./product.html?id=${element._id}`; //adding element id to url parameters
         image.src = element.imageUrl;
         image.alt = element.altTxt;
         title.innerHTML = element.name;
         texte.innerHTML = element.description;
 
+        //adding elements to DOM
         items.appendChild(link);
         link.appendChild(article);
         article.appendChild(image);

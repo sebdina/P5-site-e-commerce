@@ -70,8 +70,8 @@ const updateTotals = () => {
         price += element.price * element.quantity; // calculating total price
     })
 
-    totalQuantity.innerHTML = qty;
-    totalPrice.innerHTML = price;
+    totalQuantity.innerHTML = qty; //displaying total quantity
+    totalPrice.innerHTML = price; //displaying total price
 }
 
 //create DOM objects for each results object of the Kanap cart to display on the cartpage
@@ -138,7 +138,7 @@ const addProductToCartPage = (product) => {
 
     //click listener on Delete button  
     deleteItem.addEventListener("click", () => {
-        articleToDelete = deleteItem.closest('article');
+        articleToDelete = deleteItem.closest('article');//nearest article element
         articleToDelete.remove(); //removing from DOM
         cart.remove(product.key); //removing from cart
         updateTotals(); //updating total articles and price
@@ -160,7 +160,6 @@ const addProductToCartPage = (product) => {
         };
 
     })
-
     updateTotals();
 }
 
@@ -181,7 +180,6 @@ const getProductDetails = async (product) => {
     } catch (error) {
         console.log(error);
     }
-
 }
 
 //For each product in  cart, fetching and adding its detail
@@ -189,32 +187,32 @@ cart.products.forEach(element => {
     getProductDetails(element);
 });
 
-
-const orderBtn = document.getElementById('order'); // "order" button
-orderBtn.setAttribute('type', 'button'); //to prevent automatic HTML validation
-
 // fetch Post order on kanap Post route, async await function
 const postOrder = async (objecToPost) => {
     const orderRequestParam = '/order';
     const urlToFetch = `${kanapCatalogBaseUrl}${orderRequestParam}`;
-    const fetchBody = JSON.stringify(objecToPost);  
+    const fetchBody = JSON.stringify(objecToPost);// object to string for Post fetch
 
     try {
         const response = await fetch(urlToFetch, {
             method: 'POST',
-            headers: { 'content-type': 'application/json' },
+            headers: { 'content-type': 'application/json' }, //indicating json content type
             body: fetchBody
         });
         if (response.ok) {
             const jsonResponse = await response.json();
-            const fetchedOrderId = jsonResponse.orderId;
-            window.location.assign(`./confirmation.html?id=${fetchedOrderId}`); //opening confirmation page with orderId in parameter
+            const fetchedOrderId = jsonResponse.orderId;    
+            window.location.assign(`./confirmation.html?id=${fetchedOrderId}`); 
+            //opening confirmation page with orderId in parameter
         }
     } catch (error) {
         console.log(error);
     }
 
 }
+
+const orderBtn = document.getElementById('order'); // "order" button
+orderBtn.setAttribute('type', 'button'); //to prevent automatic HTML form validation
 
 // form validation on order button click
 orderBtn.onclick = () => {
@@ -293,9 +291,9 @@ orderBtn.onclick = () => {
         products: productsToPost,
     }
 
-
     //validation before sending Post order
-    if (contactFirstName && contactLastName && contactAddress && contactCity && contactEmail && productsToPost.length > 0) {
+    if (contactFirstName && contactLastName && contactAddress && contactCity 
+        && contactEmail && productsToPost.length > 0) {
 
         postOrder(objectToPost);
 
@@ -307,27 +305,29 @@ orderBtn.onclick = () => {
 const textValidation = (inputField, errField, regexValue) => {
 
     let inputValue = inputField.value.trim();
-    const inputArray = inputValue.split(' ');
+    const inputArray = inputValue.split(' ');/*divides into an array of substrings 
+                                                separated by ' ' */
 
     //removing extra spaces between words
     if (inputArray.length > 1) {
         inputValue = '';
+        //for each array element 
         inputArray.forEach(element => {
             if (element.trim() != '') {
-                inputValue = inputValue + ' ' + element;
+                inputValue = inputValue + ' ' + element;//separate substrings by a single space
             }
         })
     }
     if (inputValue === "") {
         return '';
-
+        //testing if regex false and value not empty
     } else if (!regexValue.test(inputValue) && inputValue != "") {
         errField.innerHTML = 'Saisie non valide';
         return false;
 
     } else {
         errField.innerHTML = "";
-        return inputValue.trim();
+        return inputValue.trim();//if regex ok then return trimed value
     }
 }
 

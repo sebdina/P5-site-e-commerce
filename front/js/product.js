@@ -83,11 +83,12 @@ const cart = {
     add(product) {
         //check that it is not in the cart already
         if (cart.find(product.key)) {
-            let newQty = product.quantity + cart.find(product.key).quantity; //adding new quantity to existing product qty
+            let newQty = product.quantity + cart.find(product.key).quantity; /*adding new quantity to 
+                                                                                existing product qty*/
             if (newQty > 100) { newQty = 100 } //preventing quantity to be supérior to 100
             cart.change(product.key, newQty);
         } else {
-            cart.products.push(product);
+            cart.products.push(product);// adding new product to cart
         }
         //update localStorage
         cart.sync();
@@ -113,6 +114,7 @@ addToCartBtn.onclick = () => {
     const productQty = parseInt(document.getElementById('quantity').value); // product quantity 
     const productColor = document.getElementById('colors').value; // product color
 
+    //object to add to cart
     const productToAdd = {
         key: productId + productColor, // to get a unique identifier for a product and his color
         id: productId,
@@ -136,9 +138,9 @@ addToCartBtn.onclick = () => {
             document.getElementById('quantity').setCustomValidity(''); //removing warning message on click
         };
     }
-
+    // if color selected and quantity between 1 and 100
     if (productColor && (productQty > 0 && productQty < 101)) {
-        cart.add(productToAdd);
+        cart.add(productToAdd);// add product to cart
         window.location.assign('./cart.html'); //opening cart page
     };
 
