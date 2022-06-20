@@ -122,7 +122,7 @@ addToCartBtn.onclick = () => {
         color: productColor,
     };
 
-    //form validation for color (should be selected) & quantity (between 1 and 100)
+    //form validation for color (should be selected)
     if (!productColor) {
         document.getElementById('colors').setCustomValidity("veuillez renseigner une couleur !");
         document.getElementById('colors').reportValidity();
@@ -130,7 +130,9 @@ addToCartBtn.onclick = () => {
         document.getElementById('colors').onclick = () => {
             document.getElementById('quantity').setCustomValidity(''); //removing warning message on click
         };
-    } else if (productQty < 1 || productQty > 99) {
+    }
+    //form validation for quantity (between 1 and 100)
+    if (productQty < 1 || productQty > 100) {
         document.getElementById('quantity').setCustomValidity("veuillez renseigner un nombre d'articles entre 1 et 100 !");
         document.getElementById('quantity').reportValidity();
         document.getElementById('quantity').focus();

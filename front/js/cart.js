@@ -146,7 +146,7 @@ const addProductToCartPage = (product) => {
 
     // Change listener on quantity input
     inputQty.addEventListener("change", () => {
-        if (inputQty.value < 1 || inputQty.value > 99) {
+        if (inputQty.value < 1 || inputQty.value > 100) {
             inputQty.setCustomValidity("veuillez renseigner un nombre d'articles entre 1 et 100 !");
             inputQty.reportValidity();
             inputQty.focus();
